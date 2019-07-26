@@ -25,6 +25,7 @@ router.get('/', async function(req, res, next) {
         newtodos = [
           ...newtodos,
           {
+            _id: todo._id,
             description: todo.description,
             date: todo.date,
             name: members[index].name
@@ -37,8 +38,21 @@ router.get('/', async function(req, res, next) {
 });
 
 router.post('/', async (req, res) => {
-  const { description, familyMemberId } = req.body;
+  const { description, name } = req.body;
   const date = new Date(Date.now());
+  let familyMemberId = '';
+  const members = await Member.find()
+    .select({
+      _id: 1,
+      name: 1
+    })
+    .exec();
+  let i = 0;
+  members.map(member => {
+    if (member.name == name) {
+      familyMemberId = member._id;
+    }
+  });
   const todo = new Todo({
     description,
     date,
@@ -52,14 +66,14 @@ router.post('/', async (req, res) => {
   }
 });
 
-// router.delete('/:id', async function (req, res, next) {
-//     const { id } = req.params;
-//     try {
-//         const apartment = await Apartment.deleteOne({"_id":id});
-//         res.send(apartment)
-//     } catch (e) {
-//         res.status(404).send('not found');
-//     }
-// });
+router.delete('/:id', async function(req, res, next) {
+  const { id } = req.params;
+  try {
+    const todo = await Todo.deleteOne({ _id: id });
+    res.send(todo);
+  } catch (e) {
+    res.status(404).send('not found');
+  }
+});
 
 module.exports = router;
