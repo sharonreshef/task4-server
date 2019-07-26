@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
-const FamilyMemberSchema = mongoose.Schema({
+const MemberSchema = mongoose.Schema({
   name: { type: String, required: true },
   nickname: { type: String, required: true },
   description: { type: String, required: true }
 });
 
-const FamilyMember = mongoose.model('familyMember', FamilyMemberSchema);
-module.exports = { FamilyMember };
+const Member = mongoose.model('Member', MemberSchema);
+module.exports = { Member };
